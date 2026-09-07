@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Route A.C.A. — 運営オフィス</title>
+<style>
+  :root {
+    --bg: #F5F3EE;
+    --bg-grad-a: #F7F4EE;
+    --bg-grad-b: #EEEAE1;
+    --floor: #EFEAE0;
+    --floor-line: #E0D9CB;
+    --wall: #CBC2AF;
+    --desk: #FFFDF9;
+    --desk-border: #C4B9A3;
+    --accent: #2F4A6B;
+    --accent-soft: #E1E9F1;
+    --accent-2: #B5673C;
+    --accent-2-soft: #F3E3D6;
+    --text: #26241E;
+    --text-soft: #85806F;
+    --ok: #4F7A5C;
+    --warn: #B98A3B;
+    --serif: "Shippori Mincho", "Hiragino Mincho ProN", serif;
+
+    --zone-marketing: #F7EFE3;
+    --zone-content: #EAF0EC;
+    --zone-finance: #EBEEF3;
+    --zone-support: #F5EAE7;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background:
+      radial-gradient(ellipse 1200px 700px at 15% -10%, rgba(181,103,60,0.06), transparent),
+      radial-gradient(ellipse 1000px 800px at 100% 110%, rgba(47,74,107,0.07), transparent),
+      linear-gradient(160deg, var(--bg-grad-a), var(--bg-grad-b));
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+    letter-spacing: 0.01em;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&display=swap');
+
+  .app {
+    display: flex;
+    height: 100vh;
+  }
+
+  /* ---- ヘッダー ---- */
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 36px;
+    background: rgba(247,244,238,0.82);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--wall);
+    z-index: 20;
+  }
+
+  .header .title-block {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .header .title {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .header .subtitle {
+    color: var(--text-soft);
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    padding-left: 14px;
+    border-left: 1px solid var(--wall);
+  }
+
+  .header .date {
+    font-size: 12px;
+    color: var(--text-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- メインエリア（オフィス平面図） ---- */
+  .office-wrap {
+    flex: 1;
+    margin-top: 72px;
+    margin-right: 380px;
+    height: calc(100vh - 72px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding: 48px;
+  }
+
+  .office {
+    position: relative;
+    width: 920px;
+    height: 640px;
+    background:
+      linear-gradient(var(--floor-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--floor-line) 1px, transparent 1px),
+      var(--floor);
+    background-size: 40px 40px, 40px 40px, 100% 100%;
+    background-position: -1px -1px;
+    border: 1px solid var(--wall);
+    border-radius: 2px;
+    box-shadow:
+      0 1px 2px rgba(36,35,31,0.05),
+      0 20px 48px rgba(47,74,107,0.09);
+    flex-shrink: 0;
+  }
+
+  /* 部署エリアの区切り線 */
+  .zone {
+    position: absolute;
+    border: 1px solid var(--wall);
+    border-radius: 2px;
+    background: rgba(255,255,255,0.4);
+  }
+
+  .zone.marketing { background: var(--zone-marketing); }
+  .zone.content   { background: var(--zone-content); }
+  .zone.finance   { background: var(--zone-finance); }
+  .zone.support   { background: var(--zone-support); }
+
+  .zone-label {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-family: var(--serif);
+    font-size: 12.5px;
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .zone-label::after {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+    margin-top: 6px;
+    opacity: 0.5;
+  }
+
+  /* デスク */
+  .desk {
+    position: absolute;
+    width: 112px;
+    height: 62px;
+    background: var(--desk);
+    border: 1px solid var(--desk-border);
+    border-radius: 2px;
+    box-shadow:
+      0 2px 4px rgba(36,35,31,0.05),
+      0 6px 14px rgba(36,35,31,0.05);
+  }
+
+  .desk::after {
+    /* 天板の奥行きライン */
+    content: "";
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 8px;
+    height: 1px;
+    background: var(--floor-line);
+  }
+
+  .desk::before {
+    /* 椅子 */
+    content: "";
+    position: absolute;
+    width: 28px;
+    height: 20px;
+    background: var(--wall);
+    border-radius: 4px;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.45;
+  }
+
+  .staff {
+    position: absolute;
+    top: -17px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1.5px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(36,35,31,0.08);
+  }
+
+  .staff:hover {
+    transform: translateX(-50%) scale(1.08);
+    box-shadow: 0 4px 14px rgba(47,74,107,0.22);
+  }
+
+  .staff.selected {
+    box-shadow: 0 0 0 4px rgba(47,74,107,0.15), 0 4px 14px rgba(47,74,107,0.22);
+  }
+
+  .status-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 2px solid var(--floor);
+  }
+
+  .status-dot.working { background: var(--ok); }
+  .status-dot.waiting { background: var(--warn); }
+  .status-dot.done { background: var(--text-soft); }
+
+  .desk-name {
+    position: absolute;
+    bottom: -42px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: var(--text-soft);
+    white-space: nowrap;
+  }
+
+  /* CPO席 */
+  .cpo-desk {
+    position: absolute;
+    width: 130px;
+    height: 74px;
+    background: var(--desk);
+    border: 1.5px solid var(--accent-2);
+    border-radius: 4px;
+    box-shadow:
+      0 2px 4px rgba(36,35,31,0.05),
+      0 8px 18px rgba(181,103,60,0.12);
+  }
+
+  .cpo-label {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-2);
+    color: white;
+    font-family: var(--serif);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 4px 12px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* ---- サイドパネル ---- */
+  .panel {
+    position: fixed;
+    top: 72px;
+    right: 380px;
+    width: 340px;
+    height: calc(100vh - 72px);
+    background: #FFFDFA;
+    border-left: 1px solid var(--wall);
+    box-shadow: -16px 0 40px rgba(47,74,107,0.08);
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0.28s;
+    z-index: 25;
+    padding: 34px 30px;
+    overflow-y: auto;
+  }
+
+  .panel.open {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, visibility 0s linear 0s;
+  }
+
+  .panel-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--text-soft);
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .panel-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1.5px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .panel-name {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  .panel-role {
+    font-size: 12.5px;
+    color: var(--text-soft);
+    margin-bottom: 26px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--floor);
+  }
+
+  .panel-section {
+    margin-bottom: 26px;
+  }
+
+  .panel-section h4 {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 10px 0;
+    letter-spacing: 0.08em;
+  }
+
+  .panel-status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .panel-status-row .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background: var(--floor);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+
+  .progress-pct {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin-top: 6px;
+  }
+
+  .task-item {
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--floor);
+  }
+
+  .task-item:last-child { border-bottom: none; }
+
+  .task-item .task-time {
+    display: block;
+    font-size: 11px;
+    color: var(--text-soft);
+    margin-top: 2px;
+  }
+
+  .empty-hint {
+    position: fixed;
+    bottom: 28px;
+    left: calc(50% - 190px);
+    transform: translateX(-50%);
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    color: var(--text-soft);
+    background: #FFFDFA;
+    padding: 8px 18px;
+    border: 1px solid var(--wall);
+    border-radius: 20px;
+    box-shadow: 0 4px 14px rgba(47,74,107,0.08);
+  }
+
+  /* ---- チャットパネル（常設・右端） ---- */
+  .chat-panel {
+    position: fixed;
+    top: 72px;
+    right: 0;
+    width: 380px;
+    height: calc(100vh - 72px);
+    background: #FFFDFA;
+    border-left: 1px solid var(--wall);
+    box-shadow: -14px 0 36px rgba(47,74,107,0.06);
+    display: flex;
+    flex-direction: column;
+    z-index: 15;
+  }
+
+  .chat-header {
+    padding: 22px 22px 16px;
+    border-bottom: 1px solid var(--floor-line);
+  }
+
+  .chat-header h3 {
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .chat-recipient-select {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .recipient-chip {
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid var(--wall);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--text-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+
+  .recipient-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .recipient-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .chat-key-area {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--floor-line);
+    background: var(--zone-finance);
+  }
+
+  .chat-key-area label {
+    display: block;
+    font-size: 10.5px;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .chat-key-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .chat-key-row input {
+    flex: 1;
+    font-size: 12px;
+    padding: 7px 10px;
+    border: 1px solid var(--wall);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--text);
+    font-family: inherit;
+  }
+
+  .chat-key-row input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .chat-key-hint {
+    font-size: 10.5px;
+    color: var(--text-soft);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .chat-msg {
+    max-width: 88%;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 10px 13px;
+    border-radius: 10px;
+    white-space: pre-wrap;
+  }
+
+  .chat-msg.user {
+    align-self: flex-end;
+    background: var(--accent);
+    color: #fff;
+    border-bottom-right-radius: 3px;
+  }
+
+  .chat-msg.ai {
+    align-self: flex-start;
+    background: var(--zone-content);
+    color: var(--text);
+    border-bottom-left-radius: 3px;
+  }
+
+  .chat-msg.system {
+    align-self: center;
+    background: transparent;
+    color: var(--text-soft);
+    font-size: 11.5px;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .chat-msg-name {
+    display: block;
+    font-size: 10.5px;
+    color: var(--text-soft);
+    margin-bottom: 3px;
+    letter-spacing: 0.02em;
+  }
+
+  .chat-input-area {
+    padding: 16px 22px 20px;
+    border-top: 1px solid var(--floor-line);
+  }
+
+  .chat-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .chat-input-row textarea {
+    flex: 1;
+    resize: none;
+    font-size: 13px;
+    font-family: inherit;
+    padding: 10px 12px;
+    border: 1px solid var(--wall);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--text);
+    height: 42px;
+    line-height: 1.4;
+  }
+
+  .chat-input-row textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .chat-send-btn {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.15s ease;
+  }
+
+  .chat-send-btn:hover {
+    background: #253d5a;
+  }
+
+  .chat-send-btn:disabled {
+    background: var(--wall);
+    cursor: not-allowed;
+  }
+
+  /* WebLLM and collapsible chat */
+  .model-status-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}.model-status-dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex-shrink:0}.model-status-dot.ready{background:var(--ok)}.model-status-dot.error{background:#9b4c43}.model-load-btn{width:100%;padding:9px 12px;border:0;border-radius:5px;background:var(--accent);color:#fff;font-family:inherit;cursor:pointer}.model-load-btn:disabled{background:var(--wall);cursor:not-allowed}.model-progress{width:100%;height:6px;background:var(--floor);border-radius:3px;overflow:hidden;margin-top:9px}.model-progress-fill{width:0;height:100%;background:var(--accent);transition:width .2s ease}
+  .chat-panel{transition:transform .28s cubic-bezier(.22,1,.36,1),visibility 0s}.chat-panel.closed{transform:translateX(100%);visibility:hidden}.office-wrap{transition:margin-right .28s cubic-bezier(.22,1,.36,1)}body.chat-closed .office-wrap{margin-right:0}body.chat-closed .panel{right:0}body.chat-closed .empty-hint{left:50%}.chat-toggle-btn{position:fixed;top:84px;right:392px;z-index:40;border:0;border-radius:5px;padding:9px 12px;background:var(--accent);color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 5px 16px rgba(47,74,107,.2);transition:right .28s,background .15s}body.chat-closed .chat-toggle-btn{right:14px}
+  .panel-close{left:20px!important;right:auto!important;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:#FFFDFA!important;border:1px solid var(--wall)!important;border-radius:50%;box-shadow:0 4px 12px rgba(47,74,107,.1)}.panel-avatar{margin-left:48px}
+  @media(max-width:760px){.chat-panel{width:min(380px,100vw)}.office-wrap{margin-right:0;padding:24px}.panel{right:0;width:min(340px,100vw)}.chat-toggle-btn,body.chat-closed .chat-toggle-btn{right:14px}.empty-hint{display:none}}
+
+  /* ---- Official website knowledge (hidden, automatic) ---- */
+  .site-knowledge-area{display:none!important}
+  .site-knowledge-area{margin-top:14px;padding-top:12px;border-top:1px solid var(--floor-line)}
+  .site-knowledge-area label{display:block;margin-bottom:6px;font-size:10.5px;color:var(--text-soft)}
+  .site-url-row{display:flex;gap:6px}.site-url-row input{flex:1;min-width:0;padding:7px 9px;border:1px solid var(--wall);border-radius:4px;background:#fff;color:var(--text);font-family:inherit;font-size:11px}.site-url-row input:focus{outline:none;border-color:var(--accent)}
+  .site-url-row button{flex-shrink:0;padding:7px 10px;border:0;border-radius:4px;background:var(--accent);color:#fff;font-family:inherit;font-size:11px;cursor:pointer}.site-url-row button:disabled{background:var(--wall);cursor:not-allowed}
+  .site-load-status{margin-top:6px;color:var(--text-soft);font-size:10.5px;line-height:1.5}.site-load-status.success{color:var(--ok)}.site-load-status.error{color:#9b4c43}
+
+  /* ---- Operations workspace ---- */
+  .ops-toggle{position:fixed;top:128px;right:392px;z-index:40;border:0;border-radius:5px;padding:9px 12px;background:var(--accent-2);color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 5px 16px rgba(181,103,60,.18);transition:right .28s}
+  body.chat-closed .ops-toggle{right:14px;top:128px}
+  .ops-panel{position:fixed;top:72px;right:380px;width:500px;height:calc(100vh - 72px);z-index:35;background:#fffdfa;border-left:1px solid var(--wall);box-shadow:-16px 0 40px rgba(47,74,107,.12);transform:translateX(105%);visibility:hidden;transition:transform .28s,visibility 0s linear .28s;display:flex;flex-direction:column}
+  .ops-panel.open{transform:translateX(0);visibility:visible;transition:transform .28s,visibility 0s}
+  body.chat-closed .ops-panel{right:0}
+  .ops-head{padding:18px 20px;border-bottom:1px solid var(--floor-line);display:flex;justify-content:space-between;align-items:center}.ops-head h3{font-family:var(--serif);font-size:16px;margin:0}.ops-close{border:1px solid var(--wall);background:#fff;border-radius:50%;width:34px;height:34px;cursor:pointer}
+  .ops-tabs{display:flex;gap:4px;padding:10px 12px;border-bottom:1px solid var(--floor-line);overflow-x:auto}.ops-tab{border:1px solid var(--wall);background:#fff;border-radius:14px;padding:6px 10px;font-size:11px;white-space:nowrap;cursor:pointer}.ops-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .ops-body{padding:16px 18px;overflow:auto;flex:1}.ops-view{display:none}.ops-view.active{display:block}.ops-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{border:1px solid var(--floor-line);background:#fff;border-radius:6px;padding:12px}.metric b{display:block;font-family:var(--serif);font-size:22px;color:var(--accent)}.metric span{font-size:11px;color:var(--text-soft)}
+  .ops-card{border:1px solid var(--floor-line);background:#fff;border-radius:6px;padding:12px;margin-bottom:9px}.ops-card h4{font-size:13px;margin:0 0 6px}.ops-card p{font-size:12px;line-height:1.55;margin:4px 0;color:var(--text)}.ops-meta{font-size:10.5px;color:var(--text-soft)}.ops-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.ops-actions button,.ops-form button{border:1px solid var(--wall);background:#fff;border-radius:4px;padding:6px 9px;font-size:11px;cursor:pointer}.ops-actions button.primary,.ops-form button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .ops-form{display:grid;gap:8px;margin-bottom:14px}.ops-form input,.ops-form select,.ops-form textarea{width:100%;border:1px solid var(--wall);border-radius:4px;padding:8px;font-family:inherit;font-size:12px}.ops-form textarea{min-height:70px;resize:vertical}.section-title{font-family:var(--serif);font-size:14px;margin:16px 0 9px}.queue-badge{display:none;margin-left:4px;min-width:17px;height:17px;padding:0 5px;border-radius:9px;background:var(--warn);color:#fff;font-size:9px;align-items:center;justify-content:center}.recipient-chip.busy .queue-badge,.recipient-chip.unread .queue-badge{display:inline-flex}.recipient-chip.unread{box-shadow:0 0 0 2px rgba(79,122,92,.25)}
+  .cpo-desk{cursor:pointer}.cpo-desk:hover{box-shadow:0 0 0 4px rgba(181,103,60,.13),0 8px 18px rgba(181,103,60,.18)}
+  @media(max-width:900px){.ops-panel{right:0;width:min(500px,100vw)}.ops-toggle{right:14px}.ops-grid{grid-template-columns:1fr 1fr}}
+
+  /* ---- Slack sync status and incident reporting ---- */
+  .system-alert{position:fixed;left:18px;bottom:18px;z-index:80;max-width:440px;padding:12px 14px;border-radius:7px;background:#fff7e8;border:1px solid #d8ad61;color:#5f4520;box-shadow:0 8px 26px rgba(36,35,31,.16);font-size:12px;line-height:1.55;display:none}
+  .system-alert.visible{display:block}.system-alert.error{background:#fff1ef;border-color:#c77b70;color:#7c3029}.system-alert.success{background:#edf6ef;border-color:#7ba185;color:#315f3d}.system-alert button{float:right;margin-left:10px;border:0;background:transparent;color:inherit;cursor:pointer;font-size:16px}
+  .sync-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:10px;background:var(--accent-soft);font-size:10px;color:var(--accent)}.sync-pill.error{background:#f8dddd;color:#873c35}.sync-pill.ok{background:#e3f0e6;color:#356443}
+</style>
+</head>
+<body>
+<div class="system-alert" id="systemAlert" role="alert"><button onclick="hideSystemAlert()">✕</button><span id="systemAlertText"></span></div>
+<button type="button" class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChatPanel()" aria-controls="chatPanel" aria-expanded="true">チャットを閉じる ›</button>
+
+<div class="header">
+  <div class="title-block">
+    <div class="title">Study Route A.C.A.</div>
+    <div class="subtitle">運営オフィス — 社内専用</div>
+  </div>
+  <div class="date" id="today"></div>
+</div>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <h3>社員チャット <span style="font-family:inherit;font-size:10px;font-weight:400;color:var(--ok);margin-left:6px">事業計画書 読込済み</span></h3>
+    <div class="chat-recipient-select" id="recipientSelect"></div>
+  </div>
+
+  <div class="chat-key-area"><div class="model-status-row"><span class="model-status-dot" id="modelStatusDot"></span><strong style="font-size:12px">ブラウザ内AI</strong></div><button type="button" class="model-load-btn" id="loadModelBtn" onclick="loadLocalModel()">AI社員を起動</button><div class="model-progress"><div class="model-progress-fill" id="modelProgress"></div></div><div class="chat-key-hint" id="modelStatus">初回のみAIモデルをダウンロードします。アカウント・APIキー・利用料金は不要です。</div>
+    <div class="site-knowledge-area">
+      <label for="siteUrlInput">公式サイトURL</label>
+      <div class="site-url-row"><input type="url" id="siteUrlInput" value="https://studyroute-aca.github.io/" placeholder="https://..."><button type="button" id="loadSiteBtn" onclick="loadWebsiteKnowledge()">読み込む</button></div>
+      <div class="site-load-status" id="siteLoadStatus">ページ表示後に公式サイトを自動で読み込みます。</div>
+    </div>
+  </div>
+
+  <div class="chat-messages" id="chatMessages"></div>
+
+  <div class="chat-input-area">
+    <div class="chat-input-row">
+      <textarea id="chatInput" placeholder="メッセージを入力..."></textarea>
+      <button class="chat-send-btn" id="sendBtn" onclick="sendChatMessage()">→</button>
+    </div>
+  </div>
+</div>
+
+
+<button type="button" class="ops-toggle" id="opsToggle" onclick="openOps('dashboard')">業務管理</button>
+<div class="ops-panel" id="opsPanel">
+  <div class="ops-head"><h3>運営ダッシュボード</h3><button class="ops-close" onclick="closeOps()">✕</button></div>
+  <div class="ops-tabs">
+    <button class="ops-tab active" data-view="dashboard" onclick="showOpsView('dashboard')">CPO</button>
+    <button class="ops-tab" data-view="tasks" onclick="showOpsView('tasks')">タスク</button>
+    <button class="ops-tab" data-view="artifacts" onclick="showOpsView('artifacts')">成果物</button>
+    <button class="ops-tab" data-view="handoffs" onclick="showOpsView('handoffs')">引き継ぎ</button>
+    <button class="ops-tab" data-view="knowledge" onclick="showOpsView('knowledge')">社内知識</button>
+  </div>
+  <div class="ops-body">
+    <section class="ops-view active" id="ops-dashboard"></section>
+    <section class="ops-view" id="ops-tasks"></section>
+    <section class="ops-view" id="ops-artifacts"></section>
+    <section class="ops-view" id="ops-handoffs"></section>
+    <section class="ops-view" id="ops-knowledge"></section>
+  </div>
+</div>
+<div class="office-wrap">
+  <div class="office" id="office"></div>
+</div>
+
+<div class="panel" id="panel">
+  <button class="panel-close" onclick="closePanel()">✕</button>
+  <div id="panelContent"></div>
+</div>
+
+<div class="empty-hint">社員のアイコンをクリックすると詳細が表示されます</div>
+
+<script>
+const today = new Date();
+document.getElementById('today').textContent =
+  today.getFullYear() + '年' + (today.getMonth()+1) + '月' + today.getDate() + '日';
+
+// ---- 部署ゾーン定義（オフィス平面図の区画） ----
+const zones = [
+  { id: 'marketing', label: 'マーケティング部', x: 24,  y: 60,  w: 260, h: 220 },
+  { id: 'content',   label: '教材開発部',       x: 300, y: 60,  w: 260, h: 220 },
+  { id: 'finance',   label: '経理部',           x: 24,  y: 300, w: 260, h: 220 },
+  { id: 'support',   label: '広報・カスタマー部', x: 300, y: 300, w: 260, h: 220 },
+];
+
+// ---- 社員データ（ダミー。後で note / GitHub 等の実データに接続予定） ----
+const staff = [
+  {
+    id: 'm1', name: '桜庭 陽菜', dept: 'marketing', role: 'マーケティング部 担当AI社員',
+    x: 90, y: 130, status: 'working',
+    progress: 62,
+    currentTask: 'note新着記事の告知文を作成中',
+    tasks: [
+      { text: 'YouTube動画の概要欄を作成', time: '今日 09:12' },
+      { text: 'Xの投稿文を3案作成', time: '今日 08:40' },
+      { text: '先週のnote閲覧数を集計', time: '昨日 18:20' },
+    ],
+    note: 'SNS・note発信のトーンをチームの雰囲気に合わせて調整中。',
+    systemPrompt: 'あなたは「桜庭陽菜」、Study Route A.C.A.（航空大学校受験対策の教材・情報発信チーム）のマーケティング部担当AI社員です。note記事の告知文、SNS投稿文、YouTube概要欄など、発信まわりの相談に乗ってください。丁寧で前向きな話し方、ただし馴れ馴れしすぎない敬語で答えてください。'
+  },
+  {
+    id: 'c1', name: '結城 蒼', dept: 'content', role: '教材開発部 担当AI社員',
+    x: 370, y: 130, status: 'working',
+    progress: 40,
+    currentTask: '航空大学校 物理過去問の解説ドラフトを作成中',
+    tasks: [
+      { text: '数学 大問3の類題を2問作成', time: '今日 10:05' },
+      { text: '英語頻出語句リストを更新', time: '今日 07:50' },
+      { text: '地学分野の出題傾向を分析', time: '昨日 20:10' },
+    ],
+    note: '英語Section IIの語彙対策を優先タスクとして進行中。',
+    systemPrompt: 'あなたは「結城蒼」、Study Route A.C.A.（航空大学校受験対策の教材・情報発信チーム）の教材開発部担当AI社員です。過去問分析、問題作成、解答解説の相談に乗ってください。正確さを重視し、落ち着いた丁寧な敬語で答えてください。'
+  },
+  {
+    id: 'f1', name: '早坂 律', dept: 'finance', role: '経理部 担当AI社員',
+    x: 90, y: 370, status: 'waiting',
+    progress: 85,
+    currentTask: '今月のnote売上レポート、承認待ち',
+    tasks: [
+      { text: '教材別の売上を集計', time: '今日 06:30' },
+      { text: '前月比のグラフを作成', time: '昨日 22:00' },
+    ],
+    note: '月次レポートは作成済み。CPOの確認待ちの状態。',
+    systemPrompt: 'あなたは「早坂律」、Study Route A.C.A.（航空大学校受験対策の教材・情報発信チーム）の経理部担当AI社員です。売上整理、データ集計、レポート作成の相談に乗ってください。数字に基づいた簡潔で正確な受け答えを心がけ、丁寧な敬語で答えてください。'
+  },
+  {
+    id: 's1', name: '深町 澪', dept: 'support', role: '広報・カスタマー部 担当AI社員',
+    x: 370, y: 370, status: 'done',
+    progress: 100,
+    currentTask: '本日分の問い合わせ、対応完了',
+    tasks: [
+      { text: '問い合わせフォームの内容を分類', time: '今日 11:00' },
+      { text: '返信文のドラフトを2件作成', time: '今日 10:20' },
+      { text: 'お知らせ欄の文言を更新', time: '昨日 19:40' },
+    ],
+    note: '問い合わせ0件〜数件/日を想定。返信は下書きまで、送信前にCPOが確認。',
+    systemPrompt: 'あなたは「深町澪」、Study Route A.C.A.（航空大学校受験対策の教材・情報発信チーム）の広報・カスタマー部担当AI社員です。問い合わせ対応の下書き、お知らせ文の作成の相談に乗ってください。相手への配慮が伝わる、温かみのある丁寧な敬語で答えてください。'
+  },
+];
+
+const statusLabel = { working: '作業中', waiting: '確認待ち', done: '完了' };
+
+// ---- 可変状態（進捗・ステータス・作業ログ）をlocalStorageから復元 ----
+const STATE_KEY = 'office_staff_state';
+function loadStaffState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
+    staff.forEach(s => {
+      if (saved[s.id]) {
+        s.status = saved[s.id].status ?? s.status;
+        s.progress = saved[s.id].progress ?? s.progress;
+        s.currentTask = saved[s.id].currentTask ?? s.currentTask;
+        s.tasks = saved[s.id].tasks ?? s.tasks;
+        s.note = saved[s.id].note ?? s.note;
+      }
+    });
+  } catch (e) { /* 復元失敗時は初期値のまま */ }
+}
+function saveStaffState() {
+  const toSave = {};
+  staff.forEach(s => {
+    toSave[s.id] = {
+      status: s.status,
+      progress: s.progress,
+      currentTask: s.currentTask,
+      tasks: s.tasks,
+      note: s.note
+    };
+  });
+  localStorage.setItem(STATE_KEY, JSON.stringify(toSave));
+}
+loadStaffState();
+
+function nowLabel() {
+  const d = new Date();
+  return `今日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function addTaskLog(staffId, text) {
+  const s = staff.find(x => x.id === staffId);
+  if (!s) return;
+  s.tasks.unshift({ text, time: nowLabel() });
+  s.tasks = s.tasks.slice(0, 8); // 直近8件まで保持
+  s.currentTask = text;
+  saveStaffState();
+}
+
+function updateProgress(staffId, progress, status) {
+  const s = staff.find(x => x.id === staffId);
+  if (!s) return;
+  if (typeof progress === 'number') s.progress = Math.max(0, Math.min(100, progress));
+  if (status) s.status = status;
+  saveStaffState();
+  refreshDeskDot(staffId);
+  if (currentRecipientId === staffId && document.getElementById('panel').classList.contains('open')) {
+    openPanel(staffId); // パネルが開いていれば再描画
+  }
+}
+
+function refreshDeskDot(staffId) {
+  const el = document.getElementById('staff-' + staffId);
+  if (!el) return;
+  const dot = el.querySelector('.status-dot');
+  const s = staff.find(x => x.id === staffId);
+  if (dot && s) {
+    dot.className = 'status-dot ' + s.status;
+  }
+}
+
+const office = document.getElementById('office');
+
+// ゾーン描画
+zones.forEach(z => {
+  const div = document.createElement('div');
+  div.className = 'zone ' + z.id;
+  div.style.left = z.x + 'px';
+  div.style.top = z.y + 'px';
+  div.style.width = z.w + 'px';
+  div.style.height = z.h + 'px';
+  const label = document.createElement('div');
+  label.className = 'zone-label';
+  label.textContent = z.label;
+  div.appendChild(label);
+  office.appendChild(div);
+});
+
+// CPO席（中央下）
+const cpo = document.createElement('div');
+cpo.className = 'cpo-desk';
+cpo.title = 'CPOダッシュボードを開く';
+cpo.onclick = () => openOps('dashboard');
+cpo.style.left = '395px';
+cpo.style.top = '560px';
+const cpoLabel = document.createElement('div');
+cpoLabel.className = 'cpo-label';
+cpoLabel.textContent = 'CPO席（あなた）';
+cpo.appendChild(cpoLabel);
+office.appendChild(cpo);
+
+// 社員デスク描画
+staff.forEach(s => {
+  const desk = document.createElement('div');
+  desk.className = 'desk';
+  desk.style.left = s.x + 'px';
+  desk.style.top = s.y + 'px';
+
+  const person = document.createElement('div');
+  person.className = 'staff';
+  person.id = 'staff-' + s.id;
+  person.textContent = s.name[0];
+  person.onclick = () => openPanel(s.id);
+
+  const dot = document.createElement('div');
+  dot.className = 'status-dot ' + s.status;
+  person.appendChild(dot);
+
+  const nameTag = document.createElement('div');
+  nameTag.className = 'desk-name';
+  nameTag.textContent = s.name;
+
+  desk.appendChild(person);
+  desk.appendChild(nameTag);
+  office.appendChild(desk);
+});
+
+function openPanel(id) {
+  const s = staff.find(x => x.id === id);
+  document.querySelectorAll('.staff').forEach(el => el.classList.remove('selected'));
+  document.getElementById('staff-' + id).classList.add('selected');
+
+  const dotColor = { working: 'var(--ok)', waiting: 'var(--warn)', done: 'var(--text-soft)' }[s.status];
+
+  document.getElementById('panelContent').innerHTML = `
+    <div class="panel-avatar">${s.name[0]}</div>
+    <div class="panel-name">${s.name}</div>
+    <div class="panel-role">${s.role}</div>
+
+    <div class="panel-section">
+      <h4>ステータス</h4>
+      <div class="panel-status-row">
+        <div class="dot" style="background:${dotColor}"></div>
+        ${statusLabel[s.status]} — ${s.currentTask}
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${s.progress}%"></div></div>
+      <div class="progress-pct">進捗 ${s.progress}%</div>
+    </div>
+
+    <div class="panel-section">
+      <h4>最近の作業ログ</h4>
+      ${s.tasks.map(t => `
+        <div class="task-item">
+          ${t.text}
+          <span class="task-time">${t.time}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="panel-section">
+      <h4>メモ</h4>
+      <div style="font-size:13px; line-height:1.6; color:var(--text)">${s.note}</div>
+    </div>
+  `;
+  document.getElementById('panel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('panel').classList.remove('open');
+  document.querySelectorAll('.staff').forEach(el => el.classList.remove('selected'));
+}
+
+/* ---- チャット機能 ---- */
+let currentRecipientId = staff[0].id;
+const CHAT_HISTORY_KEY = 'office_chat_histories';
+
+function loadChatHistories() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '{}');
+    const histories = {};
+    staff.forEach(s => histories[s.id] = saved[s.id] || []);
+    return histories;
+  } catch (e) {
+    const histories = {};
+    staff.forEach(s => histories[s.id] = []);
+    return histories;
+  }
+}
+const chatHistories = loadChatHistories();
+
+function saveChatHistories() {
+  localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(chatHistories));
+}
+
+const recipientSelect = document.getElementById('recipientSelect');
+staff.forEach(s => {
+  const chip = document.createElement('div');
+  chip.className = 'recipient-chip' + (s.id === currentRecipientId ? ' active' : '');
+  chip.innerHTML = `${escapeHtml(s.name)} <span class="queue-badge" id="queue-${s.id}"></span>`;
+  chip.onclick = () => switchRecipient(s.id);
+  chip.id = 'chip-' + s.id;
+  recipientSelect.appendChild(chip);
+});
+
+function switchRecipient(id) {
+  currentRecipientId = id;
+  document.querySelectorAll('.recipient-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('chip-' + id).classList.add('active');
+  renderChatMessages();
+}
+
+function renderChatMessages() {
+  const container = document.getElementById('chatMessages');
+  const history = chatHistories[currentRecipientId];
+  const s = staff.find(x => x.id === currentRecipientId);
+
+  if (history.length === 0) {
+    container.innerHTML = `<div class="chat-msg system">${s.name}さんとのチャットです。メッセージを送ってみてください。</div>`;
+    return;
+  }
+
+  container.innerHTML = history.map(m => {
+    if (m.role === 'user') {
+      return `<div class="chat-msg user">${escapeHtml(m.text)}</div>`;
+    } else if (m.role === 'model') {
+      return `<div class="chat-msg ai"><span class="chat-msg-name">${s.name}</span>${escapeHtml(m.text)}</div>`;
+    } else {
+      return `<div class="chat-msg system">${escapeHtml(m.text)}</div>`;
+    }
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+renderChatMessages();
+
+
+
+
+// ---- YouTubeチャンネル知識 ----
+const YOUTUBE_CHANNEL_URL='https://www.youtube.com/@StudyRouteA.C.A';
+const YOUTUBE_SUMMARY_URL='./data/youtube/summary.json';
+const YOUTUBE_CACHE_KEY='office_youtube_cache';
+const YOUTUBE_BUILTIN_SNAPSHOT={
+  channelName:'Study Route A.C.A.',handle:'@StudyRouteA.C.A',channelUrl:YOUTUBE_CHANNEL_URL,
+  description:'航空大学校受験に役立つ情報を分かりやすく発信。主な内容は数学・物理・英語の試験対策、面接・適性試験対策、受験スケジュールなど。',
+  capturedAt:'2026-09-07',
+  videos:[
+    {title:'費用0円も！？パイロットに最安でなる方法',url:'https://www.youtube.com/shorts/LWJGTwDWZjI'},
+    {title:'【航大受験】操縦適正検査、何も知らずに受けてようとしていませんか？',url:'https://www.youtube.com/shorts/TGZPb_A1pUU'},
+    {title:'航空大学校 文系でも狙える理由',url:'https://www.youtube.com/shorts/acLozHykFqc'},
+    {title:'航空大学校 倍率11倍の本当のカラクリ',url:'https://www.youtube.com/shorts/Ua809g1NfZk'},
+    {title:'8月から始める、航空大学校受験の逆転ロードマップ',url:'https://www.youtube.com/shorts/N-_mhuynzQ8'},
+    {title:'航空大学校の試験、何が出る？',url:'https://www.youtube.com/shorts/AC4xbImKzqc'},
+    {title:'【航空大学校】倍率は約11倍！？それでも諦めなくていい理由',url:'https://www.youtube.com/shorts/i-vMGhrjiMc'},
+    {title:'【航大合格へ】このチャンネルで、試験の「全て」を公開する理由',url:'https://www.youtube.com/shorts/zAOiCkzmapI'},
+    {title:'文系からでもパイロットなれるのか？',url:'https://www.youtube.com/shorts/jy0Lr151VRA'},
+    {title:'パイロットは英語苦手でも行ける！？',url:'https://www.youtube.com/shorts/8TeyeEMSrtI'},
+    {title:'パイロットは視力が悪くてもなれるの！？',url:'https://www.youtube.com/shorts/Udxkdi-ARYo'},
+    {title:'航空大学校とは',url:'https://www.youtube.com/shorts/a4ryNrcBTLA'},
+    {title:'パイロットになるには',url:'https://www.youtube.com/shorts/9JC30BnfQfI'}
+  ]
+};
+let youtubeKnowledge={...YOUTUBE_BUILTIN_SNAPSHOT,status:'builtin'};
+function validateYouTubePayload(data){
+  if(!data||typeof data!=='object'||!Array.isArray(data.videos))throw new Error('YouTubeデータ形式が不正です');
+  if(data.channelUrl&&data.channelUrl!==YOUTUBE_CHANNEL_URL)throw new Error('指定外YouTubeチャンネルです');
+  const raw=JSON.stringify(data);if(/AIza[0-9A-Za-z_-]+|access_token|refresh_token/i.test(raw))throw new Error('認証情報らしき値を検出しました');
+}
+async function loadYouTubeKnowledge(){
+  try{
+    const response=await fetch(YOUTUBE_SUMMARY_URL,{cache:'no-store'});
+    if(response.ok){const data=await response.json();validateYouTubePayload(data);youtubeKnowledge={...data,status:'ok'};localStorage.setItem(YOUTUBE_CACHE_KEY,JSON.stringify(youtubeKnowledge));return;}
+    if(response.status!==404)throw new Error(`HTTP ${response.status}`);
+    youtubeKnowledge={...YOUTUBE_BUILTIN_SNAPSHOT,status:'builtin'};
+  }catch(error){
+    try{const cached=JSON.parse(localStorage.getItem(YOUTUBE_CACHE_KEY)||'null');if(cached){youtubeKnowledge={...cached,status:'cached'};reportProblem('YOUTUBE_SYNC_FAILED','YouTube更新に失敗したため前回データを使用します',error.message);return;}}catch{}
+    youtubeKnowledge={...YOUTUBE_BUILTIN_SNAPSHOT,status:'builtin'};reportProblem('YOUTUBE_SYNC_FAILED','YouTube最新情報の取得に失敗したため内蔵情報を使用します',error.message);
+  }finally{renderOps();}
+}
+function buildYouTubeContext(query,employee){
+  const q=String(query).toLowerCase();
+  if(!/youtube|ユーチューブ|動画|チャンネル|航空大学校|パイロット|文系|英語|視力|適性|倍率|試験/.test(q)&&employee?.dept!=='marketing')return '';
+  const terms=[...q.matchAll(/[一-龠々ぁ-んァ-ヶーa-z0-9]{2,}/g)].map(m=>m[0]);
+  let selected=(youtubeKnowledge.videos||[]).map(v=>({v,score:terms.reduce((n,t)=>n+(v.title.toLowerCase().includes(t)?1:0),0)})).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.v);
+  if(!selected.length)selected=(youtubeKnowledge.videos||[]).slice(0,5);
+  return `【公式YouTubeチャンネル情報】\nチャンネル: ${youtubeKnowledge.channelName} ${youtubeKnowledge.handle}\n概要: ${youtubeKnowledge.description}\n関連動画:\n${selected.map(v=>`・${v.title} ${v.url}`).join('\n')}\n【利用ルール】動画タイトルと登録済み概要の範囲のみ事実として扱い、動画を実際に視聴・文字起こししたとは主張しないでください。参照元を公式YouTubeチャンネルと記載してください。`;
+}
+
+// ---- Slack読み取り仕様（公開HTMLにはトークンを保存しない） ----
+const SLACK_CHANNELS = [
+  {id:'C0BL4K34AKE',name:'ai-material-selection',purpose:'教材作成候補',privacy:'internal',includeThreads:true},
+  {id:'C0BPYA6L3E3',name:'line-one-step',purpose:'One Step新規LINE登録者アンケート',privacy:'sensitive-anonymized-only',includeThreads:true}
+];
+const SLACK_SUMMARY_URL='./data/slack/summary.json';
+const SLACK_CACHE_KEY='office_slack_sanitized_cache';
+let slackKnowledge={status:'not_loaded',syncedAt:'',channels:[],decisions:[],surveySummary:[],errors:[]};
+
+function showSystemAlert(message,type='error',persistent=false){
+  const box=document.getElementById('systemAlert'),text=document.getElementById('systemAlertText');
+  text.textContent=message;box.className='system-alert visible '+type;
+  if(!persistent)setTimeout(()=>{if(text.textContent===message)box.classList.remove('visible')},9000);
+}
+function hideSystemAlert(){document.getElementById('systemAlert').classList.remove('visible')}
+function reportProblem(code,message,detail=''){
+  const record={code,message,detail,time:new Date().toISOString()};
+  console.error('[Virtual Office]',record);
+  slackKnowledge.errors=[record,...(slackKnowledge.errors||[])].slice(0,10);
+  showSystemAlert(`問題を検出しました: ${message}${detail?' / '+detail:''}`,'error',true);
+  try{localStorage.setItem('office_last_problem',JSON.stringify(record))}catch{}
+  renderOps();
+}
+function validateSlackPayload(data){
+  if(!data||typeof data!=='object')throw new Error('Slackデータがオブジェクトではありません');
+  if(!Array.isArray(data.channels))throw new Error('channels配列がありません');
+  const allowed=new Set(SLACK_CHANNELS.map(c=>c.id));
+  for(const ch of data.channels){if(!allowed.has(ch.channelId))throw new Error('許可されていないチャンネルが含まれています');}
+  const raw=JSON.stringify(data);
+  const sensitivePatterns=[/xox[baprs]-/i,/AIza[0-9A-Za-z_-]+/i,/\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b/,/\b0\d{9,10}\b/];
+  if(sensitivePatterns.some(re=>re.test(raw)))throw new Error('トークン・メール・電話番号の可能性がある情報を検出しました');
+  return true;
+}
+async function loadSlackKnowledge(){
+  try{
+    const response=await fetch(SLACK_SUMMARY_URL,{cache:'no-store'});
+    if(response.status===404){
+      slackKnowledge.status='not_connected';
+      reportProblem('SLACK_DATA_NOT_FOUND','Slackの安全な中継データが未配置です','data/slack/summary.json が必要です');
+      return;
+    }
+    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    const data=await response.json();validateSlackPayload(data);
+    slackKnowledge={status:'ok',syncedAt:data.syncedAt||'',channels:data.channels||[],decisions:data.decisions||[],surveySummary:data.surveySummary||[],errors:[]};
+    localStorage.setItem(SLACK_CACHE_KEY,JSON.stringify(slackKnowledge));
+    showSystemAlert('Slackの匿名化済みデータを読み込みました。','success');
+  }catch(error){
+    try{const cached=JSON.parse(localStorage.getItem(SLACK_CACHE_KEY)||'null');if(cached){slackKnowledge={...cached,status:'cached'};reportProblem('SLACK_SYNC_FAILED','Slack同期に失敗したため前回データを使用します',error.message);return;}}catch{}
+    slackKnowledge.status='error';reportProblem('SLACK_SYNC_FAILED','Slackデータを読み込めませんでした',error.message);
+  }finally{renderOps();}
+}
+function buildSlackContext(query,employee){
+  if(!['ok','cached'].includes(slackKnowledge.status))return '';
+  const q=String(query).toLowerCase(),dept=employee?.dept||'';let blocks=[];
+  if(/教材|候補|採用|作成|問題|模擬|解説/.test(q)||['content','marketing','finance'].includes(dept)){
+    blocks=blocks.concat((slackKnowledge.decisions||[]).slice(0,3).map(x=>`教材決定: ${x.summary}（${x.status||'状態不明'}）`));
+  }
+  if(/one ?step|アンケート|登録|学習|苦手|支援|ニーズ/.test(q)||dept==='support'){
+    blocks=blocks.concat((slackKnowledge.surveySummary||[]).slice(0,3).map(x=>`匿名化集計: ${x.summary}`));
+  }
+  if(!blocks.length)return '';
+  return `【Slackの承認済み・匿名化済み情報】\n${blocks.join('\n')}\n【利用ルール】提案と決定を区別し、個人情報を推測・表示しないでください。参照元をSlackと記載してください。`;
+}
+
+// ---- 事業計画書の共通知識（2026年9月版） ----
+const BUSINESS_KNOWLEDGE = [
+  {id:'plan-overview',title:'事業概要',tags:['会社','事業','対象','誰','サービス','航空大学校'],departments:['all'],content:'Study Route A.C.A.は、航空大学校受験の学習支援チーム。航空大学校最終合格者、受験経験者、元大手塾講師の知見を結集し、情報不足で対策に迷う受験生を支援する。ブランドメッセージは「学ぶ道筋が、合格につながる。」。'},
+  {id:'plan-issue',title:'受験生が抱える課題',tags:['課題','情報不足','参考書','独学','一次情報','二次情報'],departments:['marketing','content','support'],content:'航空大学校受験は公式サイトや養成課程案内などの一次情報が中心で、市販の体系的な参考書や問題集などの二次情報が極めて少ない。合格者の知見や学習ルートが一般に流通せず、受験生が独学に頼りやすいことが課題。'},
+  {id:'plan-value',title:'提供価値',tags:['価値','強み','合格者','受験経験者','塾講師','教材設計'],departments:['all'],content:'最終合格者の実体験、受験経験者による学習量設計と心構え、元大手塾講師によるつまずきと見直しの視点を一つの教材に組み合わせる。教材そのものだけでなく、教材をどう使い、何を捨てるかという合格までの道筋を提供価値とする。'},
+  {id:'plan-one-step',title:'Study Route One Step',tags:['one step','伴走','学習計画','進捗','月例','到達度検査','個別指導'],departments:['content','support'],content:'Study Route One Stepは授業や問題解説を中心とせず、受験期から逆算した週・日単位の学習計画、進捗確認、月例到達度検査、計画の微調整を通じて合格まで伴走するサービス。学士・一般・社会人など入口に合わせてルートを提示する。'},
+  {id:'plan-materials',title:'note教材ラインアップ',tags:['note','教材','演習問題','模擬試験','解答解説','pdf','販売'],departments:['marketing','content','finance'],content:'note教材は、過去問を分解・再構成して基礎から実戦まで整理する演習問題、本番形式で時間配分と解答の流れを確認する模擬試験、解法の理由や失点箇所まで説明する解答解説の三本柱。PDF等のデジタルデータとしてnote上で販売し、決済完了後に閲覧またはダウンロードする。販売アカウントはnote.com/made_in_jp。'},
+  {id:'plan-flow',title:'受験プロセスと提供内容',tags:['プロセス','学習計画','筆記','身体検査','適性','面接'],departments:['content','support'],content:'支援プロセスは、入口に合わせた学習計画の設計、過去問分析ベースの筆記試験対策、到達度検査と体調管理による身体検査・適性対策、受験経験者の知見を活かした面接対策の4段階。'},
+  {id:'plan-model',title:'料金・提供モデル',tags:['料金','価格','費用','提供形態','固定費','line','問い合わせ'],departments:['finance','support'],content:'教室の固定費を持たず、デジタル配信と個別伴走で完結する。note教材の価格は各販売ページで設定。One StepはLINE相談または問い合わせ窓口を通じて受講可否と条件を個別案内する。資料に具体的な一律料金の記載はないため、金額を推測してはならない。'},
+  {id:'plan-team',title:'チームの強み',tags:['チーム','専門性','実体験','情報ニッチ','強み'],departments:['all'],content:'航空大学校最終合格者、受験経験者、元大手塾講師が在籍し、複数視点で教材を設計する。市販参考書がほぼ存在しないニッチ領域で演習教材と学習情報を提供する。合格者数や利用者数の具体的数値は資料にないため、実績数を作ってはならない。'},
+  {id:'plan-next',title:'今後のアクション',tags:['今後','次','拡充','ロードマップ','ネットワーク'],departments:['all'],content:'今後は、演習問題・模擬試験・解答解説のnote教材ラインを継続拡充し、One Stepの月例到達度検査と進捗確認を継続運用できる伴走枠を広げ、合格者・受験経験者の知見を教材へ反映する人的ネットワークを拡張する。'}
+];
+
+function normalizeBusinessText(value){return String(value||'').toLowerCase().replace(/\s+/g,'');}
+function buildBusinessContext(query, employee){
+  const normalized=normalizeBusinessText(query);
+  const dept=employee?.dept||'';
+  const terms=[...String(query).toLowerCase().matchAll(/[一-龠々ぁ-んァ-ヶーA-Za-z0-9.]{2,}/g)].map(m=>normalizeBusinessText(m[0]));
+  const scored=BUSINESS_KNOWLEDGE.map(item=>{
+    const haystack=normalizeBusinessText([item.title,item.content,...item.tags].join(' '));
+    let score=item.departments.includes('all')||item.departments.includes(dept)?1:0;
+    terms.forEach(term=>{if(haystack.includes(term))score+=3;});
+    if(normalized.includes(normalizeBusinessText(item.title)))score+=5;
+    return {...item,score};
+  }).filter(item=>item.score>1).sort((a,b)=>b.score-a.score).slice(0,3);
+  if(!scored.length)return '';
+  return `【事業計画書 2026年9月版からの参考情報】\n${scored.map(item=>`・${item.title}: ${item.content}`).join('\n')}\n\n【使用ルール】この資料を会社の公式な事業方針として優先してください。資料にない料金、実績、人数、成果を推測しないでください。回答末尾に「参照: 事業計画書」と記載してください。`;
+}
+
+// ---- WebLLM ブラウザ内AI ----
+let webllmEngine=null,modelLoading=false,modelReady=false;
+// ---- 公式サイト知識 ----
+const SITE_URL_STORAGE_KEY='office_official_site_url';
+let websiteKnowledge={url:'',title:'',content:''};
+async function loadWebsiteKnowledge(){
+  const input=document.getElementById('siteUrlInput'),button=document.getElementById('loadSiteBtn'),status=document.getElementById('siteLoadStatus');
+  const url=input.value.trim();
+  if(!url)return;
+  button.disabled=true;
+  try{
+    const root=new URL(url),queue=[root.href],seen=new Set(),pages=[];
+    while(queue.length&&pages.length<5){
+      const current=queue.shift();if(seen.has(current))continue;seen.add(current);
+      try{
+        const response=await fetch(current,{cache:'no-cache'});if(!response.ok)continue;
+        const html=await response.text(),doc=new DOMParser().parseFromString(html,'text/html');
+        doc.querySelectorAll('script,style,noscript,iframe,svg,nav,footer').forEach(el=>el.remove());
+        const title=doc.querySelector('title')?.textContent?.trim()||current;
+        const main=doc.querySelector('main')||doc.querySelector('article')||doc.body;
+        const content=String(main?.innerText||'').replace(/\r/g,'').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim().slice(0,12000);
+        if(content.length>=50)pages.push({url:current,title,content});
+        doc.querySelectorAll('a[href]').forEach(a=>{try{const next=new URL(a.getAttribute('href'),current);next.hash='';if(next.origin===root.origin&&!seen.has(next.href)&&queue.length<20)queue.push(next.href)}catch{}});
+      }catch{}
+    }
+    if(!pages.length)throw new Error('本文なし');
+    websiteKnowledge={url:root.href,title:pages[0].title,content:pages.map(x=>`【${x.title}】\n${x.content}`).join('\n\n'),pages};
+    localStorage.setItem(SITE_URL_STORAGE_KEY,root.href);
+    localStorage.setItem('office_website_knowledge',JSON.stringify({...websiteKnowledge,savedAt:new Date().toISOString()}));
+    status.textContent=`${pages.length}ページ読込済み`;status.className='site-load-status success';
+  }catch(error){
+    console.error(error);
+    try{const cached=JSON.parse(localStorage.getItem('office_website_knowledge')||'null');if(cached?.content)websiteKnowledge=cached;}catch{}
+  }finally{button.disabled=false;button.textContent='読み込む';renderKnowledge();}
+}
+function buildWebsiteContext(query){
+  if(!websiteKnowledge.content)return '';
+  const synonyms={'会社':['事業','運営','組織','プロジェクト'],'目標':['理念','目的','ビジョン','方針','将来'],'商品':['教材','サービス','コンテンツ','販売'],'料金':['価格','金額','値段','費用'],'勉強':['学習','対策','受験'],'航空大学校':['航大','航空大','受験対策'],'問い合わせ':['連絡','質問','サポート','相談'],'youtube':['動画','チャンネル','配信'],'note':['記事','投稿','教材販売']};
+  const companyWords=['study route','aca','会社','事業','運営','理念','目標','サービス','商品','教材','料金','価格','航空大学校','航大','公式サイト','問い合わせ','youtube','note'];
+  const normalized=String(query).toLowerCase();
+  if(!companyWords.some(word=>normalized.includes(word)))return '';
+  const expanded=new Set(normalized.split(/[\\s、。・「」『』（）()！？!?]+/).filter(w=>w.length>=2));
+  for(const [key,values] of Object.entries(synonyms)){if(normalized.includes(key)||values.some(v=>normalized.includes(v))){expanded.add(key);values.forEach(v=>expanded.add(v));}}
+  const matches=websiteKnowledge.content.split(/\\n{2,}/).filter(x=>x.trim().length>=20).map(text=>{const lower=text.toLowerCase();let score=0;expanded.forEach(word=>{if(lower.includes(word))score+=word.length>=4?3:2;});return{text,score};}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,3);
+  if(!matches.length)return '【公式サイト情報】\\n質問に関連する記載は公式サイト本文から見つかりませんでした。会社情報を推測しないでください。';
+  const reference=matches.map(x=>x.text).join('\\n\\n').slice(0,3000);
+  return `【公式サイト情報】\\nサイト名: ${websiteKnowledge.title}\\nURL: ${websiteKnowledge.url}\\n\\n${reference}\\n\\n【利用ルール】公式サイトの記載を優先し、記載のない会社情報を作らないでください。確認できない場合は「公式サイトでは確認できません」と回答してください。`;
+}
+
+const LOCAL_MODEL_ID='Qwen2.5-3B-Instruct-q4f16_1-MLC';
+function setModelStatus(text,state='waiting',progress=null){document.getElementById('modelStatus').textContent=text;const dot=document.getElementById('modelStatusDot');dot.className='model-status-dot'+(state==='ready'?' ready':state==='error'?' error':'');if(progress!==null)document.getElementById('modelProgress').style.width=Math.max(0,Math.min(100,progress))+'%'}
+async function loadLocalModel(){if(modelReady||modelLoading)return;const btn=document.getElementById('loadModelBtn');if(!('gpu'in navigator)){setModelStatus('WebGPUを利用できません。最新版のChromeまたはEdgeで開いてください。','error',0);return}modelLoading=true;btn.disabled=true;btn.textContent='AI社員を準備中...';document.getElementById('sendBtn').disabled=true;setModelStatus('高精度3Bモデルを読み込んでいます...','waiting',0);try{const webllm=await import('https://esm.run/@mlc-ai/web-llm');webllmEngine=await webllm.CreateMLCEngine(LOCAL_MODEL_ID,{initProgressCallback:r=>{const pct=typeof r.progress==='number'?Math.round(r.progress*100):0;setModelStatus(r.text||`AIモデルを準備しています... ${pct}%`,'waiting',pct)}});modelReady=true;btn.textContent='AI社員 起動済み';setModelStatus('高精度3Bモデルの起動完了。AIはこのブラウザ内で動作しています。','ready',100);document.getElementById('sendBtn').disabled=false}catch(err){console.error(err);webllmEngine=null;modelReady=false;btn.disabled=false;btn.textContent='もう一度起動';setModelStatus('起動できませんでした。空きメモリを確認し、再読み込み後にもう一度お試しください。','error',0)}finally{modelLoading=false}}
+async function processQueuedMessage(recipientId,text){if(!modelReady||!webllmEngine){await loadLocalModel();if(!modelReady||!webllmEngine)throw new Error('AIモデル未起動')}const s=staff.find(x=>x.id===recipientId),history=chatHistories[recipientId];history.push({role:'user',text});saveChatHistories();if(currentRecipientId===recipientId)renderChatMessages();const sendBtn=document.getElementById('sendBtn');const container=document.getElementById('chatMessages'),thinkingEl=document.createElement('div');thinkingEl.className='chat-msg system';thinkingEl.textContent=`${s.name}さんが入力中...`;thinkingEl.id='thinking-indicator';container.appendChild(thinkingEl);container.scrollTop=container.scrollHeight;
+try{const websiteContext=buildWebsiteContext(text);const businessContext=buildBusinessContext(text,s);const slackContext=buildSlackContext(text,s);const youtubeContext=buildYouTubeContext(text,s);const taskContext=`【現在の状態】\nステータス: ${statusLabel[s.status]}\n進捗: ${s.progress}%\n現在のタスク: ${s.currentTask}\n最近の作業ログ: ${s.tasks.slice(0,3).map(t=>t.text).join(' / ')}\nメモ: ${s.note}\n\n【重要な作業方針】\n通常の安全な作業は、人間への途中確認や逐次承認を求めず、可能な範囲をまとめて進めてください。ただし、CAPTCHA、認証切れ、追加認証、破壊的操作、投稿成否不明、正規画面で人間操作が必須の箇所では安全停止してください。有料API、従量課金、課金設定は使用せず、無料で実行可能な範囲に限定してください。\n\n【回答ルール】\n1. 結論を最初に示してください。\n2. 自分の担当分野を優先してください。\n3. 公式サイトと依頼内容を混同しないでください。\n4. 資料にない会社情報を推測しないでください。\n5. 実行していない作業を完了と報告しないでください。\n6. 不明なことは不明と明記してください。\n7. 通常300文字以内の簡潔な敬語で回答してください。\n8. 必要に応じて箇条書きを使用してください。\n\n【進捗更新】新しい作業を依頼された場合や進捗更新が必要な場合だけ、回答末尾に次を付けてください。\n<OFFICE_UPDATE>{"changed":true,"new_task":"短いタスク名","progress":10,"status":"working"}</OFFICE_UPDATE>\n単なる雑談や質問では付けないでください。statusはworking、waiting、doneのいずれかです。`;
+const recent=history.filter(m=>m.role==='user'||m.role==='model').slice(-6).map(m=>({role:m.role==='model'?'assistant':'user',content:m.text}));document.getElementById('thinking-indicator')?.remove();const bubble=document.createElement('div');bubble.className='chat-msg ai';bubble.id='streaming-message';const name=document.createElement('span');name.className='chat-msg-name';name.textContent=s.name;const output=document.createElement('span');bubble.append(name,output);container.appendChild(bubble);const stream=await webllmEngine.chat.completions.create({messages:[{role:'system',content:s.systemPrompt+'\n'+taskContext+'\n'+businessContext+'\n'+websiteContext+'\n'+slackContext+'\n'+youtubeContext},...recent],temperature:.6,max_tokens:400,stream:true});let rawText='',last=0;for await(const chunk of stream){const delta=chunk?.choices?.[0]?.delta?.content||'';if(!delta)continue;rawText+=delta;const now=performance.now();if(now-last>=35){output.textContent=rawText;container.scrollTop=container.scrollHeight;last=now}}output.textContent=rawText;rawText=rawText.trim();bubble.remove();let replyText=rawText||'申し訳ありません。回答を生成できませんでした。',update=null;const match=replyText.match(/<OFFICE_UPDATE>\s*([\s\S]*?)\s*<\/OFFICE_UPDATE>/);if(match){try{update=JSON.parse(match[1]);replyText=replyText.replace(match[0],'').trim()}catch(e){console.warn(e)}}history.push({role:'model',text:replyText});saveArtifact({title:s.name+'の回答',staffId:s.id,content:replyText,status:'draft'});saveChatHistories();if(currentRecipientId===recipientId)renderChatMessages();if(update?.changed){if(update.new_task)addTaskLog(s.id,String(update.new_task));const allowed=['working','waiting','done'],nextStatus=allowed.includes(update.status)?update.status:undefined,p=Number(update.progress);if(Number.isFinite(p))updateProgress(s.id,p,nextStatus);else if(nextStatus)updateProgress(s.id,undefined,nextStatus);history.push({role:'system',text:'ダッシュボードの進捗・タスクを更新しました。'});saveChatHistories();if(currentRecipientId===recipientId)renderChatMessages()}}
+catch(err){console.error(err);document.getElementById('streaming-message')?.remove();history.push({role:'system',text:'AI社員から回答を取得できませんでした。端末の空きメモリを確認してください。'});saveChatHistories();if(currentRecipientId===recipientId)renderChatMessages()}finally{document.getElementById('thinking-indicator')?.remove()}}
+
+// ---- 指示キュー・タスク・成果物・CPO管理 ----
+const QUEUE_KEY='office_instruction_queue',TASK_KEY='office_tasks',ARTIFACT_KEY='office_artifacts',HANDOFF_KEY='office_handoffs';
+let instructionQueue=JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]'),queueRunning=false;
+let officeTasks=JSON.parse(localStorage.getItem(TASK_KEY)||'[]'),officeArtifacts=JSON.parse(localStorage.getItem(ARTIFACT_KEY)||'[]'),officeHandoffs=JSON.parse(localStorage.getItem(HANDOFF_KEY)||'[]');
+const uid=prefix=>prefix+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+function persistOps(){localStorage.setItem(QUEUE_KEY,JSON.stringify(instructionQueue));localStorage.setItem(TASK_KEY,JSON.stringify(officeTasks));localStorage.setItem(ARTIFACT_KEY,JSON.stringify(officeArtifacts));localStorage.setItem(HANDOFF_KEY,JSON.stringify(officeHandoffs));}
+function escapeAttr(v){return escapeHtml(String(v)).replace(/"/g,'&quot;')}
+function sendChatMessage(){
+  const input=document.getElementById('chatInput'),text=input.value.trim();if(!text)return;
+  const staffId=currentRecipientId;
+  instructionQueue.push({id:uid('q'),staffId,text,createdAt:new Date().toISOString(),status:'waiting'});
+  if(/作成|調査|分析|まとめ|更新|確認|依頼|作って|考えて/.test(text))officeTasks.unshift({id:uid('t'),title:text.slice(0,55),staffId,status:'未着手',priority:'通常',progress:0,createdAt:new Date().toISOString()});
+  input.value='';persistOps();updateQueueBadges();renderOps();runInstructionQueue();
+}
+async function runInstructionQueue(){
+  if(queueRunning)return;queueRunning=true;
+  while(true){const item=instructionQueue.find(x=>x.status==='waiting');if(!item)break;item.status='working';persistOps();updateQueueBadges();
+    const task=officeTasks.find(t=>t.staffId===item.staffId&&t.status==='未着手');if(task){task.status='作業中';task.progress=15;}
+    try{await processQueuedMessage(item.staffId,item.text);item.status='done';if(task){task.status='確認待ち';task.progress=100;}}
+    catch(e){console.error(e);item.status='error';if(task)task.status='未着手';}
+    persistOps();updateQueueBadges();renderOps();
+  }
+  instructionQueue=instructionQueue.filter(x=>!['done'].includes(x.status)).slice(-30);queueRunning=false;persistOps();updateQueueBadges();
+}
+function importSlackDecisionsToTasks(){
+  const known=new Set(officeTasks.map(t=>t.sourceId).filter(Boolean));let added=0;
+  for(const d of slackKnowledge.decisions||[]){
+    if(!d.approved||!d.sourceId||known.has(d.sourceId))continue;
+    officeTasks.unshift({id:uid('t'),title:d.title||d.summary||'Slack承認済み教材',staffId:'c1',status:'未着手',priority:'高',progress:0,createdAt:new Date().toISOString(),source:'Slack ai-material-selection',sourceId:d.sourceId});known.add(d.sourceId);added++;
+  }
+  if(added){persistOps();showSystemAlert(`Slackの承認済み教材から${added}件のタスク候補を登録しました。`,'success');renderOps();}
+}
+function updateQueueBadges(){staff.forEach(s=>{const badge=document.getElementById('queue-'+s.id),chip=document.getElementById('chip-'+s.id);if(!badge||!chip)return;const waiting=instructionQueue.filter(x=>x.staffId===s.id&&x.status==='waiting').length,busy=instructionQueue.some(x=>x.staffId===s.id&&x.status==='working');badge.textContent=busy?'処理中':waiting||'';chip.classList.toggle('busy',busy||waiting>0);});}
+function saveArtifact(a){officeArtifacts.unshift({id:uid('a'),createdAt:new Date().toISOString(),...a});officeArtifacts=officeArtifacts.slice(0,100);persistOps();renderOps();}
+function addManualTask(){const title=document.getElementById('taskTitle').value.trim(),staffId=document.getElementById('taskStaff').value,priority=document.getElementById('taskPriority').value;if(!title)return;officeTasks.unshift({id:uid('t'),title,staffId,status:'未着手',priority,progress:0,createdAt:new Date().toISOString()});persistOps();renderOps();}
+function updateTask(id,status){const t=officeTasks.find(x=>x.id===id);if(t){t.status=status;t.progress=status==='完了'?100:t.progress;persistOps();renderOps();}}
+function addHandoff(){const from=document.getElementById('handoffFrom').value,to=document.getElementById('handoffTo').value,content=document.getElementById('handoffText').value.trim();if(!content)return;officeHandoffs.unshift({id:uid('h'),from,to,content,createdAt:new Date().toISOString(),status:'未確認'});document.getElementById('handoffText').value='';persistOps();renderOps();}
+function openOps(view='dashboard'){document.getElementById('opsPanel').classList.add('open');showOpsView(view);renderOps();}
+function closeOps(){document.getElementById('opsPanel').classList.remove('open')}
+function showOpsView(view){document.querySelectorAll('.ops-view').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.ops-tab').forEach(x=>x.classList.toggle('active',x.dataset.view===view));document.getElementById('ops-'+view).classList.add('active');}
+function staffName(id){return staff.find(s=>s.id===id)?.name||id}
+function renderOps(){renderDashboard();renderTasks();renderArtifacts();renderHandoffs();renderKnowledge();}
+function renderDashboard(){const counts=st=>officeTasks.filter(t=>t.status===st).length;document.getElementById('ops-dashboard').innerHTML=`<div class="ops-grid"><div class="metric"><b>${counts('作業中')}</b><span>作業中</span></div><div class="metric"><b>${counts('確認待ち')}</b><span>確認待ち</span></div><div class="metric"><b>${counts('完了')}</b><span>完了</span></div><div class="metric"><b>${instructionQueue.filter(x=>x.status==='waiting').length}</b><span>待機キュー</span></div></div><h4 class="section-title">承認が必要</h4>${officeTasks.filter(t=>t.status==='確認待ち').slice(0,5).map(taskCard).join('')||'<p class="ops-meta">確認待ちのタスクはありません。</p>'}<h4 class="section-title">システム</h4><div class="ops-card"><p>3Bモデル: ${modelReady?'起動済み':'準備中'}</p><p>事業計画書: 読込済み</p><p>公式サイト: ${websiteKnowledge.content?'読込済み':'未取得'}</p><p>取得ページ: ${websiteKnowledge.pages?.length||1}</p><p>Slack: ${slackKnowledge.status==='ok'?'同期済み':slackKnowledge.status==='cached'?'前回データ':'未接続・要対応'}</p><p>YouTube: ${youtubeKnowledge.status==='ok'?'同期済み':youtubeKnowledge.status==='cached'?'前回データ':'内蔵情報'}</p></div>`;}
+function taskCard(t){return `<div class="ops-card"><h4>${escapeHtml(t.title)}</h4><div class="ops-meta">${staffName(t.staffId)} / ${t.priority} / ${t.status} / ${t.progress}%</div><div class="ops-actions"><button onclick="updateTask('${t.id}','作業中')">作業中</button><button onclick="updateTask('${t.id}','確認待ち')">確認待ち</button><button class="primary" onclick="updateTask('${t.id}','完了')">完了</button></div></div>`}
+function renderTasks(){document.getElementById('ops-tasks').innerHTML=`<div class="ops-form"><input id="taskTitle" placeholder="新しいタスク"><select id="taskStaff">${staff.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><select id="taskPriority"><option>通常</option><option>高</option><option>低</option></select><button class="primary" onclick="addManualTask()">タスク登録</button></div>${officeTasks.map(taskCard).join('')||'<p class="ops-meta">タスクはありません。</p>'}`;}
+function renderArtifacts(){document.getElementById('ops-artifacts').innerHTML=officeArtifacts.map(a=>`<div class="ops-card"><h4>${escapeHtml(a.title)}</h4><div class="ops-meta">${staffName(a.staffId)} / ${new Date(a.createdAt).toLocaleString('ja-JP')}</div><p>${escapeHtml(a.content).slice(0,500)}</p><div class="ops-actions"><button class="primary" onclick="navigator.clipboard.writeText(${JSON.stringify(a.content).replace(/</g,'\\u003c')})">コピー</button><button onclick="downloadArtifact('${a.id}')">保存</button></div></div>`).join('')||'<p class="ops-meta">成果物はまだありません。</p>';}
+function downloadArtifact(id){const a=officeArtifacts.find(x=>x.id===id);if(!a)return;const blob=new Blob([a.content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=a.title.replace(/[\\/:*?"<>|]/g,'_')+'.txt';link.click();URL.revokeObjectURL(url);}
+function renderHandoffs(){document.getElementById('ops-handoffs').innerHTML=`<div class="ops-form"><select id="handoffFrom">${staff.map(s=>`<option value="${s.id}">${s.name}から</option>`).join('')}</select><select id="handoffTo">${staff.map(s=>`<option value="${s.id}">${s.name}へ</option>`).join('')}</select><textarea id="handoffText" placeholder="引き継ぎ内容"></textarea><button class="primary" onclick="addHandoff()">引き継ぎ登録</button></div>${officeHandoffs.map(h=>`<div class="ops-card"><h4>${staffName(h.from)} → ${staffName(h.to)}</h4><p>${escapeHtml(h.content)}</p><div class="ops-meta">${new Date(h.createdAt).toLocaleString('ja-JP')}</div></div>`).join('')||'<p class="ops-meta">引き継ぎはありません。</p>'}`;}
+function renderKnowledge(){const el=document.getElementById('ops-knowledge');if(!el)return;let cachedAt='';try{const c=JSON.parse(localStorage.getItem('office_website_knowledge')||'null');cachedAt=c?.savedAt?new Date(c.savedAt).toLocaleString('ja-JP'):''}catch{}el.innerHTML=`<div class="ops-card"><h4>事業計画書 2026年9月版</h4><p>事業概要、課題、提供価値、One Step、note教材、受験プロセス、料金モデル、チーム、今後の方針を登録済み。</p></div><div class="ops-card"><h4>公式サイト</h4><p>${websiteKnowledge.pages?.length||0}ページ取得済み</p><div class="ops-meta">最終保存: ${cachedAt||'今回のセッション'}</div></div><div class="ops-card"><h4>Slack読み取り</h4><p><span class="sync-pill ${slackKnowledge.status==='ok'?'ok':'error'}">${slackKnowledge.status}</span></p><p>ai-material-selection（C0BL4K34AKE）</p><p>line-one-step（C0BPYA6L3E3、匿名化集計のみ）</p><div class="ops-meta">最終同期: ${slackKnowledge.syncedAt?new Date(slackKnowledge.syncedAt).toLocaleString('ja-JP'):'未同期'}</div><div class="ops-actions"><button onclick="loadSlackKnowledge()">再読込</button><button class="primary" onclick="importSlackDecisionsToTasks()">承認済み候補をタスク化</button></div></div><div class="ops-card"><h4>YouTube</h4><p><span class="sync-pill ${youtubeKnowledge.status==='ok'?'ok':''}">${youtubeKnowledge.status}</span> ${youtubeKnowledge.channelName}</p><p>登録動画: ${(youtubeKnowledge.videos||[]).length}件</p><div class="ops-meta">チャンネル: ${youtubeKnowledge.channelUrl}</div><div class="ops-actions"><button onclick="loadYouTubeKnowledge()">再読込</button><button class="primary" onclick="window.open(YOUTUBE_CHANNEL_URL,'_blank','noopener')">チャンネルを開く</button></div></div><div class="ops-card"><h4>未接続</h4><p>社内限定資料</p></div>`;}
+
+// Enterで送信（Shift+Enterは改行）
+document.getElementById('chatInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+});
+// ---- 社員チャットの開閉と自動起動 ----
+const CHAT_PANEL_STATE_KEY='office_chat_panel_open';
+function setChatPanelState(isOpen){const panel=document.getElementById('chatPanel'),btn=document.getElementById('chatToggleBtn');panel.classList.toggle('closed',!isOpen);document.body.classList.toggle('chat-closed',!isOpen);btn.setAttribute('aria-expanded',String(isOpen));btn.textContent=isOpen?'チャットを閉じる ›':'‹ 社員チャット';localStorage.setItem(CHAT_PANEL_STATE_KEY,isOpen?'true':'false')}
+function toggleChatPanel(){setChatPanelState(document.getElementById('chatPanel').classList.contains('closed'))}
+const savedPanelState=localStorage.getItem(CHAT_PANEL_STATE_KEY);setChatPanelState(savedPanelState===null?true:savedPanelState==='true');
+window.addEventListener('load',async()=>{const saved=localStorage.getItem(SITE_URL_STORAGE_KEY);if(saved)document.getElementById('siteUrlInput').value=saved;await loadWebsiteKnowledge();await Promise.all([loadSlackKnowledge(),loadYouTubeKnowledge()]);renderOps();updateQueueBadges();setTimeout(()=>{loadLocalModel();runInstructionQueue()},700)});
+window.loadYouTubeKnowledge=loadYouTubeKnowledge;window.hideSystemAlert=hideSystemAlert;window.loadSlackKnowledge=loadSlackKnowledge;window.importSlackDecisionsToTasks=importSlackDecisionsToTasks;window.openOps=openOps;window.closeOps=closeOps;window.showOpsView=showOpsView;window.addManualTask=addManualTask;window.updateTask=updateTask;window.addHandoff=addHandoff;window.downloadArtifact=downloadArtifact;window.loadWebsiteKnowledge=loadWebsiteKnowledge;window.loadLocalModel=loadLocalModel;window.sendChatMessage=sendChatMessage;window.toggleChatPanel=toggleChatPanel;
+</script>
+
+</body>
+</html>
